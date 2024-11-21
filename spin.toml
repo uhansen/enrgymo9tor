@@ -7,14 +7,16 @@ authors = ["uhansen <uffe.hansen@gmail.com>"]
 description = "Monitor household power consumption"
 
 [[trigger.http]]
-route = "/userapi/"
+route = "/userapi/..."
 component = "user-api"
 
 [component.user-api]
 source = "UserApi/target/wasm32-wasi/release/user_api.wasm"
 allowed_outbound_hosts = []
+sqlite_databases = ["default"]
+
 [component.user-api.build]
 command = "cargo build --target wasm32-wasi --release"
 workdir = "UserApi"
 watch = ["src/**/*.rs", "Cargo.toml"]
-sqlite_databases = ["default"]
+
