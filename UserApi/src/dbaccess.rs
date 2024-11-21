@@ -1,4 +1,4 @@
-use rusqlite::{params, Connection, Result};
+//use sqlite::{params, Connection, Result};
 
 // src/crates/dbaccess.rs
 
@@ -13,7 +13,7 @@ pub struct Customer {
     pub apikey: String,
 }
 
-pub fn add_new(conn: &Connection, customer: &Customer) -> Result<()> {
+pub fn add_new(conn: &Connection, customer: &Customer) -> Result<impl IntoResponse> {
     conn.execute(
         "INSERT INTO customer (firstname, lastname, email, address, apikey) VALUES (?1, ?2, ?3, ?4, ?5)",
         params![customer.firstname, customer.lastname, customer.email, customer.address, customer.apikey],
@@ -21,7 +21,7 @@ pub fn add_new(conn: &Connection, customer: &Customer) -> Result<()> {
     Ok(())
 }
 
-pub fn update(conn: &Connection, customer: &Customer) -> Result<()> {
+pub fn update(conn: &Connection, customer: &Customer) -> Result<impl IntoResponse> {
     conn.execute(
         "UPDATE customer SET firstname = ?1, lastname = ?2, email = ?3, address = ?4, apikey = ?5 WHERE id = ?6",
         params![customer.firstname, customer.lastname, customer.email, customer.address, customer.apikey, customer.id],
@@ -29,12 +29,12 @@ pub fn update(conn: &Connection, customer: &Customer) -> Result<()> {
     Ok(())
 }
 
-pub fn delete(conn: &Connection, id: i32) -> Result<()> {
+pub fn delete(conn: &Connection, id: i32) -> Result<impl IntoResponse> {
     conn.execute("DELETE FROM customer WHERE id = ?1", params![id])?;
     Ok(())
 }
 
-pub fn get_by_id(conn: &Connection, id: i32) -> Result<Customer> {
+pub fn get_by_id(conn: &Connection, id: i32) -> Result<impl IntoResponse> {
     conn.query_row(
         "SELECT id, firstname, lastname, email, address, apikey FROM customer WHERE id = ?1",
         params![id],
@@ -51,7 +51,7 @@ pub fn get_by_id(conn: &Connection, id: i32) -> Result<Customer> {
     )
 }
 
-pub fn get_all(conn: &Connection) -> Result<Vec<Customer>> {
+pub fn get_all(conn: &Connection) -> Result<impl IntoResponse> {
     let mut stmt = conn.prepare("SELECT id, firstname, lastname, email, address, apikey FROM customer")?;
     let customer_iter = stmt.query_map([], |row| {
         Ok(Customer {
