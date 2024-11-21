@@ -17,3 +17,4 @@ allowed_outbound_hosts = []
 command = "cargo build --target wasm32-wasi --release"
 workdir = "UserApi"
 watch = ["src/**/*.rs", "Cargo.toml"]
+sqlite_databases = ["default"]
