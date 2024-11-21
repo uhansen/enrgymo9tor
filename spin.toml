@@ -1,0 +1,19 @@
+spin_manifest_version = 2
+
+[application]
+name = "enrgymo9tor"
+version = "0.1.0"
+authors = ["uhansen <uffe.hansen@gmail.com>"]
+description = "Monitor household power consumption"
+
+[[trigger.http]]
+route = "/userapi/"
+component = "user-api"
+
+[component.user-api]
+source = "UserApi/target/wasm32-wasi/release/user_api.wasm"
+allowed_outbound_hosts = []
+[component.user-api.build]
+command = "cargo build --target wasm32-wasi --release"
+workdir = "UserApi"
+watch = ["src/**/*.rs", "Cargo.toml"]
